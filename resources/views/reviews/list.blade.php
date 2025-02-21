@@ -16,7 +16,7 @@
 <div class="container mt-5" style="margin-bottom: 50px;"> 
     <div class="card shadow-lg p-4">
         <div class="card-header bg-transparent d-flex justify-content-center position-relative">
-            <h2 class="mb-0 text-center w-100">{{ session('title', 'Mis Reseñas') }}</h2>
+            <h2 class="mb-0 text-center w-100">Mis Reseñas</h2>
             <!-- Botón para abrir el modal -->
             <button class="btn btn-primary position-absolute end-0" data-bs-toggle="modal" data-bs-target="#addReviewModal">
                 <i class="fa-solid fa-comment-medical fa-beat"></i>

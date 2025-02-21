@@ -62,7 +62,7 @@
                                 <a class="dropdown-item d-flex align-items-center" href="{{ route('reviews.list') }}">
                                     <i class="fa-solid fa-star me-2"></i> {{ __('Mis Reseñas') }}
                                 </a>
-                                <a class="dropdown-item d-flex align-items-center" href="">
+                                <a class="dropdown-item d-flex align-items-center" href="{{ route('payments.list') }}">
                                     <i class="fa-brands fa-cc-visa me-2"></i> {{ __('Mis Pagos') }}
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="">
@@ -70,9 +70,6 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="">
                                     <i class="fa-solid fa-user-group me-2"></i> {{ __('Contadores') }}
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="{{ route('users.trashed') }}">
-                                    <i class="fa-solid fa-user-group me-2"></i> {{ __('Eliminados') }}
                                 </a>
                                 <button type="button" class="dropdown-item d-flex align-items-center text-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
                                     <i class="fas fa-trash-alt me-2"></i> Eliminar Cuenta
@@ -92,7 +89,7 @@
 
                             <!-- Opciones basadas en el nivel del admin -->
                             @elseif(Auth::user() instanceof App\Models\Admin)
-                                <!-- <a class="dropdown-item d-flex align-items-center" href="{{ route('reviews.index') }}">
+                                <a class="dropdown-item d-flex align-items-center" href="{{ route('reviews.index') }}">
                                     <i class="fa-solid fa-star me-2"></i> {{ __('Reseñas') }}
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="">
@@ -103,7 +100,10 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="">
                                     <i class="fa-solid fa-briefcase me-2"></i> {{ __('Contadores') }}
-                                </a> -->
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="{{ route('users.trashed') }}">
+                                    <i class="fa-solid fa-user-group me-2"></i> {{ __('Eliminados') }}
+                                </a>
                             @endif
                                 <!-- Opción de cerrar sesión -->
                                 <a class="dropdown-item d-flex align-items-center" href="{{ route('logout') }}"

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PaymentController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
@@ -41,3 +42,14 @@ Route::get('/reviews', [ReviewsController::class, 'index'])->name('reviews.index
 Route::get('/my-reviews', [ReviewsController::class, 'myReviews'])->name('reviews.list');
 Route::get('/reviews/create', [ReviewsController::class, 'create'])->name('reviews.create');
 Route::post('/reviews', [ReviewsController::class, 'store'])->name('reviews.store');
+
+
+Route::get('/mis-pagos', [PaymentController::class, 'myPayments'])->name('payments.list');
+Route::get('/pagos', [PaymentController::class, 'index'])->name('payments.index');
+Route::get('/pagos/create', [PaymentController::class, 'create'])->name('payments.create');
+Route::post('/pagos', [PaymentController::class, 'store'])->name('payments.store');
+Route::get('/pagos/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+Route::get('/pagos/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
+Route::put('/pagos/{payment}', [PaymentController::class, 'update'])->name('payments.update');
+Route::delete('/pagos/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+Route::delete('/pagos/{payment}/delete-file', [PaymentController::class, 'deleteFile'])->name('payments.deleteFile');

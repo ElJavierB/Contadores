@@ -49,4 +49,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'user_id'); 
+        // 'user_id' es el nombre de la columna en Payment que referencia al usuario
+    }
 }
