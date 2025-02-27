@@ -65,7 +65,7 @@
                                 <a class="dropdown-item d-flex align-items-center" href="{{ route('payments.list') }}">
                                     <i class="fa-brands fa-cc-visa me-2"></i> {{ __('Mis Pagos') }}
                                 </a>
-                                <a class="dropdown-item d-flex align-items-center" href="">
+                                <a class="dropdown-item d-flex align-items-center" href="{{ route('appointments.index') }}">
                                     <i class="fa-solid fa-calendar-check me-2"></i> {{ __('Mis Citas') }}
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="">

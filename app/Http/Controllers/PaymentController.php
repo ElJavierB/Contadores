@@ -15,7 +15,7 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        $payments =  Payment::with(['user', 'accountant'])->get(); // Obtén todos los pagos
+        $payments = Payment::with(['appointment.user', 'appointment.accountant'])->get();// Obtén todos los pagos
         return view('payments.index', compact('payments')); // Pasa los pagos a la vista
     }
 
@@ -85,6 +85,22 @@ class PaymentController extends Controller
         return redirect()->route('payments.list')->with('success', 'Pago actualizado exitosamente.');
     }
 
+    public function deleteFile(Payment $payment)
+    {
+        // Verificar si el usuario tiene una foto de perfil
+        if ($payment->file) {
+            // Eliminar la foto de perfil del almacenamiento
+            Storage::disk('public')->delete($payment->file);
+
+            // Eliminar la referencia de la foto de perfil en la base de datos
+            $payment->file = null;
+            $payment->save();
+        }
+
+        return redirect()->route('payments.index')->with('success', 'Comprobante eliminado exitosamente.');
+    }
+
+
     public function destroy($id)
     {
         Payment::destroy($id);
@@ -100,7 +116,7 @@ class PaymentController extends Controller
                             ->get();
 
         // Obtener todas las citas disponibles
-        $appointment = Appointment::all();
+        $appointment =  Appointment::where('user_id', Auth::id())->get();
 
         // Retorna la vista con los pagos y lss citas
         return view('payments.list', compact('payments', 'appointment'));

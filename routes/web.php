@@ -6,6 +6,7 @@ use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AppointmentController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
@@ -53,3 +54,7 @@ Route::get('/pagos/{payment}/edit', [PaymentController::class, 'edit'])->name('p
 Route::put('/pagos/{payment}', [PaymentController::class, 'update'])->name('payments.update');
 Route::delete('/pagos/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
 Route::delete('/pagos/{payment}/delete-file', [PaymentController::class, 'deleteFile'])->name('payments.deleteFile');
+
+
+Route::get('/appointments', [AppointmentController::class, 'myAppointments'])->name('appointments.index');
+

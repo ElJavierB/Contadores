@@ -54,26 +54,23 @@
                         </td>
                         <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d/m/Y H:i') }}</td>
                         <td>
-                            @if($payment->file)
-                                <button class="btn btn-sm btn-primary view-payment-file" 
-                                        data-file-path="{{ asset('storage/' . $payment->file) }}"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#viewPaymentFileModal">Ver</button>
+                            @if ($payment->file)
+                                <a href="#" class="open-payment-modal" data-file-path="{{ asset('storage/' . $payment->file) }}">
+                                    <i class="fas fa-image"></i>
+                                </a>
                             @else
-                                <span class="text-muted">No disponible</span>
+                                No Disponible
                             @endif
                         </td>
                         <td>
-                        <button class="btn btn-sm btn-warning edit-payment" 
-                                data-payment-id="{{ $payment->id }}" 
-                                data-amount="{{ $payment->amount }}" 
-                                data-method="{{ $payment->method }}" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#editPaymentModal">
-                            Editar
-                        </button>
-
-                        
+                            <button class="btn btn-warning edit-payment-modal" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#editPaymentModal" 
+                                    data-payment-id="{{ $payment->id }}" 
+                                    data-amount="{{ $payment->amount }}" 
+                                    data-method="{{ $payment->method }}">
+                                <i class="fa-solid fa-pen-to-square"></i> 
+                            </button>
                         </td>
                     </tr>
                     @empty
@@ -98,7 +95,6 @@
             <div class="modal-body">
                 <form action="{{ route('payments.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
                     <div class="mb-3">
                         <label for="appointment_id" class="form-label">Cita</label>
                         <select class="form-select" name="appointment_id" required>
@@ -109,12 +105,10 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label for="amount" class="form-label">Monto</label>
                         <input type="number" class="form-control" name="amount" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="method" class="form-label">Método de Pago</label>
                         <select class="form-select" name="method" required>
@@ -123,12 +117,10 @@
                             <option value="Efectivo">Efectivo</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label for="file" class="form-label">Comprobante de pago (Opcional)</label>
                         <input type="file" class="form-control" name="file" accept="image/*">
                     </div>
-
                     <div class="text-end">
                         <button type="submit" class="btn btn-success">Guardar Pago</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -141,7 +133,7 @@
 
 <!-- Modal para ver la foto -->
 <div class="modal fade" id="viewPaymentFileModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Centrar el modal y ajustar su tamaño -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Ver Comprobante de Pago</h5>
@@ -150,13 +142,12 @@
             <div class="modal-body">
                 <div class="text-center">
                     <!-- Imagen cargada dinámicamente aquí -->
-                    <img id="paymentFileImage" src="" alt="Comprobante de Pago" class="img-fluid">
+                    <img id="paymentFileImage" src="" alt="Comprobante de Pago" class="img-fluid" style="max-width: 100%; max-height: 100%;">
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- Modal para editar un pago -->
 <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-hidden="true">
@@ -170,12 +161,10 @@
                 <form id="editPaymentForm" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-
                     <div class="mb-3">
                         <label for="edit_amount" class="form-label">Monto</label>
                         <input type="number" class="form-control" id="edit_amount" name="amount" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="edit_method" class="form-label">Método de Pago</label>
                         <select class="form-select" id="edit_method" name="method" required>
@@ -184,14 +173,16 @@
                             <option value="Efectivo">Efectivo</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label for="edit_file" class="form-label">Nuevo Comprobante (Opcional)</label>
                         <input type="file" class="form-control" id="edit_file" name="file" accept="image/*">
                     </div>
-
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <button type="button" class="btn btn-danger me-2" id="delete-button" data-bs-toggle="modal"
+                                data-bs-target="#deleteFileModal" data-payment-id="">
+                                Comprobante
+                        </button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </form>
@@ -200,52 +191,75 @@
     </div>
 </div>
 
+<!-- Modal de Confirmación de Eliminación de Comprobante de Pago -->
+<div class="modal fade" id="deleteFileModal" tabindex="-1" aria-labelledby="deleteFileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteFileModalLabel">Confirmar Eliminación de Comprobante de Pago</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <form id="delete-file-form" method="POST" action="{{ route('payments.deleteFile', ['payment' => $payment->id]) }}">
+                @csrf
+                @method('DELETE')
+                <p>¿Estás seguro de que deseas eliminar tu Comprobante de Pago?</p>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Sí, eliminar foto</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Script para editar un pago -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Editar el pago
-    const editButtons = document.querySelectorAll('.edit-payment');
-    editButtons.forEach(button => {
+    document.querySelectorAll('.edit-payment-modal').forEach(button => {
         button.addEventListener('click', function() {
             const paymentId = this.dataset.paymentId;
             const amount = this.dataset.amount;
             const method = this.dataset.method;
-
-            const modal = new bootstrap.Modal(document.getElementById('editPaymentModal'));
-
+            console.log("Monto obtenido:", amount); // Para verificar si se está capturando bien
             // Asignar los valores al formulario del modal
-            document.getElementById('edit_amount').value = amount;
+            document.getElementById('edit_amount').value = amount ? parseFloat(amount) : ''; 
             document.getElementById('edit_method').value = method;
-            document.getElementById('editPaymentForm').action = '/pagos/' + paymentId; // Asegúrate que esta URL sea correcta para tu ruta de update
-
-            // Mostrar el modal
-            modal.show();
+            document.getElementById('editPaymentForm').action = `/pagos/${paymentId}`;
         });
     });
 });
 </script>
 
+<!-- Script para ver la imagen del comprobante de pago -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const viewButtons = document.querySelectorAll('.view-payment-file');
-        
+        const viewButtons = document.querySelectorAll('.open-payment-modal');
         viewButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const filePath = this.dataset.filePath;  // Obtener el archivo
-                const modal = new bootstrap.Modal(document.getElementById('viewPaymentFileModal'));  // Obtener el modal
-                document.getElementById('paymentFileImage').src = filePath;  // Establecer la fuente de la imagen
-                modal.show();
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Evita que el enlace recargue la página
+                const filePath = this.dataset.filePath;  // Obtiene la imagen
+                document.getElementById('paymentFileImage').src = filePath;  // Actualiza el modal
+                const modal = new bootstrap.Modal(document.getElementById('viewPaymentFileModal')); 
+                modal.show(); // Abre el modal
             });
-        });
-
-        // Asegurarse de cerrar correctamente el modal al hacer clic en la X
-        const closeButton = document.querySelector('.btn-close');  // Botón de cerrar modal
-        closeButton.addEventListener('click', function() {
-            const modal = new bootstrap.Modal(document.getElementById('viewPaymentFileModal'));
-            modal.hide();  // Cerrar el modal explícitamente
         });
     });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-payment-file').forEach(button => {
+        button.addEventListener('click', function() {
+            const paymentId = this.dataset.paymentId;
+            if (paymentId) {
+                // Actualiza la acción del formulario con el ID del pago
+                document.getElementById('delete-file-form').action = `/pagos/${paymentId}/delete-file`;
+            }
+        });
+    });
+});
 
+</script>
 @endsection

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Accountant;
 
 class Appointment extends Model
 {
@@ -14,4 +16,13 @@ class Appointment extends Model
         'status',
         'notes',
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function accountant(){
+        return $this->belongsTo(Accountant::class);
+    }
+
 }
