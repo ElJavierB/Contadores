@@ -326,22 +326,6 @@ button:hover {
     border-radius: 5px;
 }
 
-.bg-info {
-    background-color: #17a2b8 !important;
-}
-
-.bg-success {
-    background-color: #28a745 !important;
-}
-
-.bg-warning {
-    background-color: #ffc107 !important;
-}
-
-.bg-danger {
-    background-color: #dc3545 !important;
-}
-
 .appointment small {
     display: block;
 }
@@ -355,4 +339,96 @@ button:hover {
     border-radius: 5px;
     background-color: #f8f9fa;
     font-size: 14px;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.blue-dot {
+    background-color: #007bff;
+}
+
+.bg-warning {
+    background-color: #f0ad4e !important; /* Amarillo para Pendiente */
+}
+
+.bg-primary {
+    background-color: #007bff !important; /* Azul para Confirmada */
+}
+
+.bg-success {
+    background-color: #28a745 !important; /* Verde para Completada */
+}
+
+.bg-danger {
+    background-color: #dc3545 !important; /* Rojo para Cancelada */
+}
+
+.bg-secondary {
+    background-color: #6c757d !important; /* Gris por defecto */
+}
+
+.active-day {
+    background-color: #007bff !important; /* Color de fondo para el día activo */
+    color: white !important; /* Asegura que el texto sea blanco */
+    font-weight: bold;
+    display: flex;
+    flex-direction: column; /* Permite apilar el número y las bolitas */
+    justify-content: flex-start; /* Asegura que todo esté alineado arriba */
+    align-items: flex-start; /* Alinea el texto al inicio */
+    height: 100%; /* Asegura que ocupe toda la casilla */
+    position: relative;
+}
+
+/* Contenedor del número del día */
+.day-number {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinea el número del día a la izquierda */
+    height: 100%; /* Asegura que ocupe toda la altura de la celda */
+    width: 100%; /* Asegura que ocupe toda la anchura de la celda */
+    position: relative; /* Necesario para posicionar las bolitas */
+    padding-left: 10px; /* Espacio a la izquierda para el número */
+}
+
+/* Contenedor para las bolitas de estado */
+.status-container {
+    position: absolute; /* Posiciona las bolitas dentro de la celda */
+    bottom: 5px; /* Coloca las bolitas al fondo */
+    left: 50%;
+    transform: translateX(-50%); /* Centra las bolitas horizontalmente */
+    display: flex;
+    gap: 5px;
+}
+
+/* Estilo para las bolitas */
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Colores para las bolitas dependiendo del estado */
+.status-dot.pendiente {
+background-color: #6c757d !important;
+}
+
+.status-dot.confirmada {
+    background-color: #f0ad4e !important;
+}
+
+.status-dot.completada {
+    background-color: #28a745 !important;
+}
+
+.status-dot.cancelada {
+    background-color: #dc3545 !important;
 }

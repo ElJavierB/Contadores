@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 
 class AppointmentController extends Controller
@@ -15,23 +16,57 @@ class AppointmentController extends Controller
         // $appointments = Appointment::with(['user', 'accountant'])->get();
         // return view('appointments.appointments', compact('appointments'));
     }
-
-    public function myAppointments()
+    public function myAppointments(Request $request)
     {
-        // Obtener las citas del usuario logueado
-        $appointments = Appointment::where('user_id', Auth::id())->get();
-
-        // Agrupar las citas por mes y año
+        // Obtener el año seleccionado o el año actual por defecto
+        $year = $request->input('year', Carbon::now()->year);
+    
+        // Obtener las citas del usuario logueado para el año seleccionado
+        $appointments = Appointment::where('user_id', Auth::id())
+            ->whereYear('date', $year)
+            ->get();
+    
+        // Agrupar las citas por mes y día
         $groupedAppointments = $appointments->groupBy(function ($date) {
-            return Carbon::parse($date->date)->format('Y-m'); // Agrupamos por año y mes
+            return Carbon::parse($date->date)->format('Y-m-d'); // Agrupamos por día
         });
-
-        // Obtener el año actual
-        $currentYear = Carbon::now()->year;
-
-        return view('appointments.appointments', compact('groupedAppointments', 'currentYear'));
+    
+        // Definir los nombres de los meses
+        $months = [
+            1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
+            5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
+            9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
+        ];
+    
+        return view('appointments.appointments', compact('groupedAppointments', 'year', 'months'));
     }
+    
 
+    public function myAppointmentsByMonth(Request $request)
+    {
+        $year = $request->input('year', Carbon::now()->year);
+        $month = $request->input('month', Carbon::now()->month);
+    
+        $appointments = Appointment::where('user_id', Auth::id())
+            ->whereYear('date', $year)
+            ->whereMonth('date', $month)
+            ->get();
+    
+        // Agrupar citas por día
+        $groupedAppointments = [];
+        foreach ($appointments as $appointment) {
+            $day = Carbon::parse($appointment->date)->format('j'); // Día sin ceros iniciales
+            if (!isset($groupedAppointments[$day])) {
+                $groupedAppointments[$day] = [];
+            }
+            $groupedAppointments[$day][] = $appointment->status; // Guardar solo el estado
+        }
+    
+        Log::info('Citas enviadas al frontend:', $groupedAppointments); // 🔎 Revisión en logs
+    
+        return view('appointments.months', compact('groupedAppointments', 'year', 'month'));
+    }
+    
     
 
     public function store(Request $request)

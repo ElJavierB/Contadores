@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     var ctxGanancias = document.getElementById('gananciasChart').getContext('2d');
     var gananciasChart = new Chart(ctxGanancias, {
         type: 'line',

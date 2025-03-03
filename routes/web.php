@@ -57,4 +57,4 @@ Route::delete('/pagos/{payment}/delete-file', [PaymentController::class, 'delete
 
 
 Route::get('/appointments', [AppointmentController::class, 'myAppointments'])->name('appointments.index');
-
+Route::get('/appointments-month', [AppointmentController::class, 'myAppointmentsByMonth'])->name('appointments.months');
